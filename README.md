@@ -32,3 +32,4 @@ window.onresize = debounce(resize, 200);
 
 ### Relatived
 * [debounce](https://github.com/component/debounce)
+* [blog: debounce](https://github.com/mqyqingfeng/Blog/issues/22)
