@@ -1,20 +1,41 @@
-export interface RFunction {
-  (...args: any[]): void
+export interface Cancelable {
+  cancel(): void
 }
 
+export interface Fn {
+  (...args: any[]): any
+}
 export interface Debounce {
-  (fn: Function, wait: number): RFunction // @TODO TS: Function connot assign to (...args: any[]) => void
+  (fn: Fn, wait?: number, immediate?: boolean): Fn // @TODO TS: Function connot assign to (...args: any[]) => void
 }
 
-export const debounce: Debounce = (fn, wait) => {
-  let timeout: NodeJS.Timer;
+export const debounce: Debounce = (fn, wait = 250, immediate = false) => {
+  let timeout: NodeJS.Timer | null;
+  let result;
 
-  return function(...args: any[]) {
+  const debounced: Fn = function (...args: any[]) {
     const context = this;
 
-    clearTimeout(timeout);
-    timeout = setTimeout(() => fn.apply(context, args), wait);
+    if (timeout) clearTimeout(timeout);
+    if (immediate) {
+      const callNow = !timeout;
+      timeout = setTimeout(() => { timeout = null }, wait);
+      if (callNow) result = fn.apply(context, args);
+    } else {
+      timeout = setTimeout(() => fn.apply(context, args), wait);
+    }
+
+    return result;
   };
+
+  (debounced as Fn & Cancelable).cancel = () => {
+    if (timeout) {
+      clearTimeout(timeout);
+      timeout = null;
+    }
+  };
+
+  return debounced;
 };
 
 export default debounce;
