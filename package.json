@@ -1,6 +1,6 @@
 {
   "name": "@zcorky/debounce",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Debounce functions",
   "main": "lib/index.js",
   "repository": "https://github.com/zcorky/debounce",
