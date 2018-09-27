@@ -6,7 +6,7 @@ export interface Fn {
   (...args: any[]): any
 }
 export interface Debounce {
-  (fn: Fn, wait?: number, immediate?: boolean): Fn // @TODO TS: Function connot assign to (...args: any[]) => void
+  (fn: Fn, wait?: number, immediate?: boolean): Fn & Cancelable
 }
 
 export const debounce: Debounce = (fn, wait = 250, immediate = false) => {
@@ -35,7 +35,7 @@ export const debounce: Debounce = (fn, wait = 250, immediate = false) => {
     }
   };
 
-  return debounced;
+  return debounced as Fn & Cancelable;
 };
 
 export default debounce;
